@@ -8,7 +8,7 @@ def get_file_name(filepath):
     return os.path.basename(filepath)
 
 def ingest_py_mu_pdf(filepath):
-    """ Converts a filepath to the file's content"""
+    """ Converts a filepath to the file's content."""
     text = ""
     doc = fitz.open(filepath)
     for page in doc:
@@ -16,7 +16,7 @@ def ingest_py_mu_pdf(filepath):
     return text
 
 def output_manual_txt_content(text, output_filepath):
-    """ Outputs text to a given filepath by overwriting the file"""
+    """ Outputs text to a given filepath by overwriting the file."""
     output_file = open(output_filepath, "w",encoding="utf-8")
     output_file.write(text)
     output_file.close()
@@ -24,7 +24,7 @@ def output_manual_txt_content(text, output_filepath):
 def main(*args):
     """
     Main ingestion function. Takes in a filepath, extracts text, and outputs it to a file
-    in the ingestion/output directory
+    in the ingestion/output directory.
     """
     filepath = args[0][0]
     print(filepath)
