@@ -8,7 +8,7 @@ def get_file_name(filepath):
     return os.path.basename(filepath)
 
 def ingest_py_mu_pdf(filepath):
-    """ Converts a filepath to the file's content."""
+    """Converts a filepath to the file's content."""
     text = ""
     doc = fitz.open(filepath)
     for page in doc:
@@ -16,7 +16,7 @@ def ingest_py_mu_pdf(filepath):
     return text
 
 def output_manual_txt_content(text, output_filepath):
-    """ Outputs text to a given filepath by overwriting the file."""
+    """Outputs text to a given filepath by overwriting the file."""
     output_file = open(output_filepath, "w",encoding="utf-8")
     output_file.write(text)
     output_file.close()
@@ -27,7 +27,6 @@ def main(*args):
     in the ingestion/output directory.
     """
     filepath = args[0][0]
-    print(filepath)
     output = ingest_py_mu_pdf("manuals/auto/ford_ecosport_2020.pdf")
     filename = get_file_name(filepath)
     filename_without_extension = os.path.splitext(filename)[0]
