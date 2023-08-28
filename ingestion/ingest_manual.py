@@ -3,7 +3,7 @@ import os
 import sys
 import fitz
 
-def get_file_name(filepath): 
+def get_file_name(filepath):
     """Gets a filename from the path"""
     return os.path.basename(filepath)
 
