@@ -2,6 +2,7 @@
 
 import re
 import string
+from collections import defaultdict
 from pathlib import Path
 from typing import Optional, TypeAlias
 
@@ -50,7 +51,7 @@ class DocumentIndexer:
             self, document: list[str],
             persist_filepath: Optional[Path] = None) -> Index:
         """Creates a page number index for various words within a document."""
-        page_index: Index = {}
+        page_index: Index = defaultdict(list)
         for page_number, page in enumerate(document):
             self._index_page(page, page_number, page_index)
         self._persist_index_if_requested(page_index, persist_filepath)
@@ -59,10 +60,7 @@ class DocumentIndexer:
     def _index_page(
             self, page: str, page_number: int, page_index: Index) -> None:
         for token in _Tokenizer().tokenize(page):
-            if token in page_index:
-                page_index[token].append(page_number)
-            else:
-                page_index[token] = [page_number]
+            page_index[token].append(page_number)
 
     def _persist_index_if_requested(
             self, page_index: Index, filepath: Optional[Path]) -> None:
