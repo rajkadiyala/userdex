@@ -2,11 +2,13 @@
 
 import re
 import string
-import typing
+from collections import defaultdict
+from pathlib import Path
+from typing import Optional, TypeAlias
 
 import nltk
 
-Index: typing.TypeAlias = dict[str, list[int]]
+Index: TypeAlias = dict[str, list[int]]
 
 _PUNCTUATION = re.compile(f'[{re.escape(string.punctuation)}]')
 _STEMMER = nltk.stem.PorterStemmer()
@@ -45,16 +47,24 @@ class _Tokenizer:
 class DocumentIndexer:
     """Utility class for indexing documents."""
 
-    def index_by_page_number(self, document: list[str]) -> Index:
+    def index_by_page_number(
+            self, document: list[str],
+            persist_filepath: Optional[Path] = None) -> Index:
         """Creates a page number index for various words within a document."""
-        page_number_index: Index = {}
+        page_index: Index = defaultdict(list)
         for page_number, page in enumerate(document):
-            self._index_page(page, page_number, page_number_index)
-        return page_number_index
+            self._index_page(page, page_number, page_index)
+        self._persist_index_if_requested(page_index, persist_filepath)
+        return page_index
 
-    def _index_page(self, page: str, page_number: int, page_number_index: Index) -> None:
+    def _index_page(
+            self, page: str, page_number: int, page_index: Index) -> None:
         for token in _Tokenizer().tokenize(page):
-            if token in page_number_index:
-                page_number_index[token].append(page_number)
-            else:
-                page_number_index[token] = [page_number]
+            page_index[token].append(page_number)
+
+    def _persist_index_if_requested(
+            self, page_index: Index, filepath: Optional[Path]) -> None:
+        if filepath is None:
+            return
+        with open(filepath, 'w', encoding='utf-8') as persistent_index:
+            persistent_index.write(page_index)
